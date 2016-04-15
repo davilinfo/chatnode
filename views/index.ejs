@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>    
+    <!--<script src="index.js"></script>-->   
+    <script type='text/javascript' src='/socket.io/socket.io.js'></script>
+</head>
+<body>
+    <div>
+        <label id="lblName"></label>
+    </div>
+    <div>        
+        <textarea rows="5" name="text" id="text"></textarea>
+        <input type="button" name="btnSendChat" id="btnSendChat" value="Send" />
+    </div>
+    <div id="chatRoom">
+
+    </div>    
+    <script type="text/javascript">
+        
+        var socket = io.connect('http://localhost:1337/');
+                 
+		var sala = document.location.search.split('=')[1].split('&')[0];		
+		
+        document.getElementById('btnSendChat').addEventListener('click', function () {
+            var element =  document.getElementById('text');
+			socket.emit('chat', {text: element.value, from: document.location.search.split('=')[2].split('&')[0], room: sala});             
+			element.value = '';             
+        });        
+				
+		socket.on('chat', function (sockmsg) { 
+			if (sockmsg['room'] === sala)
+			{
+				var chatRoom = document.getElementById('chatRoom');
+                chatRoom.innerHTML = '<p>'.concat(sockmsg['text']).concat('</p>').concat(chatRoom.innerHTML);
+			}  
+			              
+        });
+								
+		document.getElementById('lblName').innerHTML = 'Sala: '.concat(sala);		
+        
+    </script>
+</body>
+</html>
