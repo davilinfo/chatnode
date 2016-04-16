@@ -34,6 +34,7 @@ socket.on('connection', function (websocket) {
         
         console.log('Room: '.concat(webroom));
         console.log(' Address: '.concat(websocket.handshake.address).concat(' from ').concat(webfrom).concat(': ').concat(webtext));
+	websocket.emit('chat', {room: webroom, text: webfrom.concat(': ').concat(webtext)} );
         websocket.broadcast.emit('chat', {room: webroom, text: webfrom.concat(': ').concat(webtext)} );
     });    
 });
