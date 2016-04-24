@@ -20,24 +20,29 @@
     </div>    
     <script type="text/javascript">
         
-        var socket = io.connect('http://localhost:1337/');
-                 
-		var sala = document.location.search.split('=')[1].split('&')[0];		
-            document.getElementById('btnSendChat').addEventListener('click', function () {
-            	var element =  document.getElementById('text');			
-		socket.emit('chat', {text: element.value, from: document.location.search.split('=')[2].split('&')[0], room: sala});             
-			element.value = '';             
-        });        		
-		socket.on('chat', function (sockmsg) { 
-			if (sockmsg['room'] === sala)
-			{
-				var chatRoom = document.getElementById('chatRoom');
-                		chatRoom.innerHTML = '<p>'.concat(sockmsg['text']).concat('</p>').concat(chatRoom.innerHTML);
-			}  
-			              
+        var socket = io.connect('http://localhost:1337/');	
+		
+	var sala = document.location.search.split('=')[1].split('&')[0];		
+        document.getElementById('btnSendChat').addEventListener('click', function () {				
+        	var element =  document.getElementById('text');	
+		socket.emit('chat', {text: element.value, from: document.location.search.split('=')[2].split('&')[0], room: sala});	
+		element.value = '';             
+        });        
+	
+	socket.on('chat', function (sockmsg) {			
+		if (sockmsg['room'] === sala)
+		{						
+			var chatRoom = document.getElementById('chatRoom');
+			chatRoom.innerHTML = '';
+			for(var index = 0; index < sockmsg['registers'].length; index++)
+			{		
+				chatRoom.innerHTML = sockmsg['registers'][index]['text'].concat(chatRoom.innerHTML);
+			}						
+		}
+						  			              
         });
 
-		document.getElementById('lblName').innerHTML = 'Sala: '.concat(sala);		
+	document.getElementById('lblName').innerHTML = 'Sala: '.concat(sala);		
         
     </script>
 </body>
