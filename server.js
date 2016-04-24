@@ -38,8 +38,11 @@ socket.on('connection', function (websocket) {
 		}else{
 			var collection = db.collection('chat'.concat(webroom));
 			console.log('Room: '.concat(webroom));
-        		console.log(' Address: '.concat(websocket.handshake.address).concat(' from ').concat(webfrom).concat(': ').concat(webtext));		
-			collection.insert({text: '<p>'.concat(webfrom).concat(': ').concat(webtext).concat('</p>'), from: webfrom, room: webroom});										
+        		console.log(' Address: '.concat(websocket.handshake.address).concat(' from ').concat(webfrom).concat(': ').concat(webtext));
+			if (webtext != 'echo')
+			{
+				collection.insert({text: '<p>'.concat(webfrom).concat(': ').concat(webtext).concat('</p>'), from: webfrom, room: webroom});
+			}
 			var stream = collection.find().sort({_id:1});
 					
 			var registers = [];
